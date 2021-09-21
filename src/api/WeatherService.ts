@@ -8,7 +8,7 @@ export default class WeatherService {
 
   static async getCityWeather(cityName: string) {
     const { data } = await this.instance.get<OWMResponse>(
-      `/weather?q=${cityName}&appid=${this.apiKey}&units=metric`
+      `/weather?q=${cityName}&appid=${this.apiKey}&units=imperial`
     );
     return data;
   }
