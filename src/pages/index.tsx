@@ -1,9 +1,15 @@
+import { Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
+
 import CityService from '../utils/CityService';
 import WeatherService from '../api/WeatherService';
 
 async function getCityData(cityName: string) {
   return await WeatherService.getCityWeather(cityName);
+}
+
+function getUrlSlug(cityName: string) {
+  return cityName.replaceAll(' ', '-').toLowerCase();
 }
 
 export default function Home() {
@@ -52,12 +58,19 @@ export default function Home() {
 
   return (
     <>
-      {weatherData.map(({ name, main }) => (
-        <div key={name} style={{ display: 'flex' }}>
-          <p style={{ marginRight: '1rem' }}>{name}</p>
-          <p>{main.temp}&#8457;</p>
-          <button onClick={removeCity(name)}>Remove Item</button>
-        </div>
+      {weatherData.map((cityData) => (
+        <Link
+          key={cityData.name}
+          style={{ display: 'flex' }}
+          to={{
+            state: { cityData },
+            pathname: `/${getUrlSlug(cityData.name)}`,
+          }}
+        >
+          <p style={{ marginRight: '1rem' }}>{cityData.name}</p>
+          <p>{cityData.main.temp}&deg;F</p>
+          <button onClick={removeCity(cityData.name)}>Remove Item</button>
+        </Link>
       ))}
     </>
   );
