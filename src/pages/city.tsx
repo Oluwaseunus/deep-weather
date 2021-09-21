@@ -1,5 +1,6 @@
-import { useEffect, useState } from 'react';
-import { RouteComponentProps, StaticContext } from 'react-router';
+import { useState, useEffect } from 'react';
+import { StaticContext } from 'react-router';
+import { Link, RouteComponentProps } from 'react-router-dom';
 
 import WeatherService from '../api/WeatherService';
 
@@ -11,6 +12,11 @@ interface LocationState {
   cityData?: OWMResponse;
 }
 
+interface Note {
+  id: string;
+  text: string;
+}
+
 interface CityPageProps
   extends RouteComponentProps<
     RouteParams,
@@ -19,8 +25,13 @@ interface CityPageProps
   > {}
 
 export default function City({ history, location }: CityPageProps) {
+  const [text, setText] = useState('');
+  const [idToEdit, setIdToEdit] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [erorrMessage, setErrorMessage] = useState('');
+  const [notes, setNotes] = useState<Note[]>(
+    JSON.parse(localStorage.getItem('' + location.state?.cityData?.id) || '[]')
+  );
 
   useEffect(() => {
     async function getCityData() {
@@ -43,6 +54,48 @@ export default function City({ history, location }: CityPageProps) {
     getCityData();
   }, [history, location.pathname, location.state?.cityData]);
 
+  useEffect(() => {
+    const notes =
+      localStorage.getItem('' + location.state?.cityData?.id) || '[]';
+    setNotes(JSON.parse(notes));
+  }, [location.state?.cityData?.id]);
+
+  useEffect(() => {
+    if (location.state?.cityData) {
+      localStorage.setItem(
+        '' + location.state!.cityData!.id,
+        JSON.stringify(notes)
+      );
+    }
+  }, [notes, location.state]);
+
+  function handleEdit(noteId: string) {
+    setIdToEdit(noteId);
+    setText(notes.find(({ id }) => id === noteId)!.text);
+  }
+
+  function removeNote(noteId: string) {
+    return function () {
+      setNotes(notes.filter(({ id }) => noteId !== id));
+    };
+  }
+
+  function saveNote() {
+    let updatedNotes: Note[] = notes;
+
+    if (idToEdit) {
+      updatedNotes = updatedNotes.map((note) =>
+        note.id === idToEdit ? { ...note, text: text } : note
+      );
+    } else {
+      updatedNotes = [...notes, { id: '' + Date.now(), text }];
+    }
+
+    setText('');
+    setIdToEdit('');
+    setNotes(updatedNotes);
+  }
+
   const { cityData } = location.state || {};
 
   if (isLoading) return <span>Loading...</span>;
@@ -51,8 +104,22 @@ export default function City({ history, location }: CityPageProps) {
 
   return (
     <div>
+      <Link to='/'>Go Home</Link>
       <p>City Name: {cityData.name}</p>
       <p>Temperature: {cityData.main.temp}&deg;F</p>
+
+      {notes.map(({ id, text }) => (
+        <div key={id} style={{ display: 'flex' }}>
+          <p onClick={() => handleEdit(id)}>{text}</p>
+          <button onClick={removeNote(id)}>Remove note</button>
+        </div>
+      ))}
+
+      <textarea
+        value={text}
+        onChange={(e) => setText(e.target.value)}
+      ></textarea>
+      <button onClick={saveNote}>Save Note</button>
     </div>
   );
 }

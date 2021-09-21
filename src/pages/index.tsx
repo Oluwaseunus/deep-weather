@@ -1,8 +1,10 @@
-import { Link } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useState, useEffect } from 'react';
+import { Link, RouteComponentProps } from 'react-router-dom';
 
 import CityService from '../utils/CityService';
 import WeatherService from '../api/WeatherService';
+
+interface HomeProps extends RouteComponentProps {}
 
 async function getCityData(cityName: string) {
   return await WeatherService.getCityWeather(cityName);
@@ -12,8 +14,9 @@ function getUrlSlug(cityName: string) {
   return cityName.replaceAll(' ', '-').toLowerCase();
 }
 
-export default function Home() {
+export default function Home({ history }: HomeProps) {
   const [isLoading, setIsLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [weatherData, setWeatherData] = useState<OWMResponse[]>([]);
 
@@ -58,6 +61,17 @@ export default function Home() {
 
   return (
     <>
+      <form
+        className='search-input__wrapper'
+        onSubmit={() => history.push(`/${getUrlSlug(searchQuery)}`)}
+      >
+        <input
+          type='text'
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+        />
+        <button type='submit'>Search</button>
+      </form>
       {weatherData.map((cityData) => (
         <Link
           key={cityData.name}
