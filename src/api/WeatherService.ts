@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { getUrlSlug } from '../utils/functions';
 
 export default class WeatherService {
   private static apiKey = process.env.REACT_APP_OWM_API_KEY;
@@ -7,14 +8,15 @@ export default class WeatherService {
   });
 
   static async getCityWeather(cityName: string) {
-    const dataName = cityName + '-data';
+    const slugName = getUrlSlug(cityName);
+    const dataName = slugName + '-data';
     const localData = localStorage.getItem(dataName);
 
     if (!localData) {
       const { data } = await this.instance.get<OWMResponse>(
         `/weather?q=${cityName}&appid=${this.apiKey}&units=imperial`
       );
-      localStorage.setItem(cityName + '-data', JSON.stringify(data));
+      localStorage.setItem(slugName + '-data', JSON.stringify(data));
       return data;
     } else {
       return JSON.parse(localData);

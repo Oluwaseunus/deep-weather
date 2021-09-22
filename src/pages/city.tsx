@@ -69,6 +69,12 @@ export default function City({ history, location }: CityPageProps) {
     }
   }, [notes, location.state]);
 
+  function addToFavourites() {
+    const favourites = JSON.parse(localStorage.getItem('favourites') || '[]');
+    favourites.push(location.state?.cityData?.name);
+    localStorage.setItem('favourites', JSON.stringify(favourites));
+  }
+
   function handleEdit(noteId: string) {
     setIdToEdit(noteId);
     setText(notes.find(({ id }) => id === noteId)!.text);
@@ -107,6 +113,7 @@ export default function City({ history, location }: CityPageProps) {
       <Link to='/'>Go Home</Link>
       <p>City Name: {cityData.name}</p>
       <p>Temperature: {cityData.main.temp}&deg;F</p>
+      <button onClick={addToFavourites}>Add to Favourites</button>
 
       {notes.map(({ id, text }) => (
         <div key={id} style={{ display: 'flex' }}>

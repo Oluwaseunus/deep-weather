@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
-import { Link, RouteComponentProps } from 'react-router-dom';
+import { RouteComponentProps } from 'react-router-dom';
 
 import CityService from '../utils/CityService';
 import WeatherService from '../api/WeatherService';
+import CityListing from '../components/CityListing';
+import { getUrlSlug, sortWeatherData } from '../utils/functions';
 
 interface HomeProps extends RouteComponentProps {}
 
@@ -10,14 +12,11 @@ async function getCityData(cityName: string) {
   return await WeatherService.getCityWeather(cityName);
 }
 
-function getUrlSlug(cityName: string) {
-  return cityName.replaceAll(' ', '-').toLowerCase();
-}
-
 export default function Home({ history }: HomeProps) {
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  const [favourites, setFavourites] = useState<OWMResponse[]>([]);
   const [weatherData, setWeatherData] = useState<OWMResponse[]>([]);
 
   useEffect(() => {
@@ -28,9 +27,7 @@ export default function Home({ history }: HomeProps) {
           CityService.getTopCities().map(getCityData)
         );
 
-        const sortedWeatherData = weatherData.sort((a, b) =>
-          a.name > b.name ? 1 : -1
-        );
+        const sortedWeatherData = sortWeatherData(weatherData);
         setWeatherData(sortedWeatherData);
       } catch (err) {
         setErrorMessage(
@@ -44,11 +41,43 @@ export default function Home({ history }: HomeProps) {
     fetchData();
   }, []);
 
+  useEffect(() => {
+    async function getFavourites() {
+      setIsLoading(true);
+      const favourites: string[] = JSON.parse(
+        localStorage.getItem('favourites') || '[]'
+      );
+      try {
+        const weatherData = await Promise.all(favourites.map(getCityData));
+        const sortedWeatherData = sortWeatherData(weatherData);
+        setFavourites(sortedWeatherData);
+      } catch (err) {
+        setErrorMessage(
+          err instanceof Error ? err.message : 'An unexpected error occurred.'
+        );
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    getFavourites();
+  }, []);
+
   function removeCity(name: string) {
     return function () {
       CityService.removeCity(name);
       setWeatherData((weatherData) =>
         weatherData.filter((cityData) => cityData.name !== name)
+      );
+    };
+  }
+
+  function removeFromFavourites(cityName: string) {
+    return function () {
+      const filtered = favourites.filter(({ name }) => name !== cityName);
+      setFavourites(filtered);
+      localStorage.setItem(
+        'favourites',
+        JSON.stringify(filtered.map(({ name }) => name))
       );
     };
   }
@@ -73,19 +102,22 @@ export default function Home({ history }: HomeProps) {
         <button type='submit'>Search</button>
       </form>
 
+      <h3>Favourites</h3>
+      {favourites.map((cityData) => (
+        <CityListing
+          key={cityData.id}
+          cityData={cityData}
+          removeCity={removeFromFavourites}
+        />
+      ))}
+
+      <h3>Defaults</h3>
       {weatherData.map((cityData) => (
-        <Link
-          key={cityData.name}
-          style={{ display: 'flex' }}
-          to={{
-            state: { cityData },
-            pathname: `/${getUrlSlug(cityData.name)}`,
-          }}
-        >
-          <p style={{ marginRight: '1rem' }}>{cityData.name}</p>
-          <p>{cityData.main.temp}&deg;F</p>
-          <button onClick={removeCity(cityData.name)}>Remove Item</button>
-        </Link>
+        <CityListing
+          key={cityData.id}
+          cityData={cityData}
+          removeCity={removeCity}
+        />
       ))}
     </>
   );
