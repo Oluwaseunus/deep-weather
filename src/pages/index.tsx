@@ -12,6 +12,12 @@ async function getCityData(cityName: string) {
   return await WeatherService.getCityWeather(cityName);
 }
 
+function geolocationPostitionErrorCallback({
+  message,
+}: GeolocationPositionError) {
+  alert(message + ', please try again.');
+}
+
 export default function Home({ history }: HomeProps) {
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
@@ -62,6 +68,24 @@ export default function Home({ history }: HomeProps) {
     getFavourites();
   }, []);
 
+  function getCurrentLocation() {
+    async function successCallback(position: GeolocationPosition) {
+      const { latitude, longitude } = position.coords;
+
+      const cityData = await WeatherService.getWeatherByCoords({
+        latitude,
+        longitude,
+      });
+
+      history.push(`/${getUrlSlug(cityData.name)}`, { cityData });
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      successCallback,
+      geolocationPostitionErrorCallback
+    );
+  }
+
   function removeCity(name: string) {
     return function () {
       CityService.removeCity(name);
@@ -101,6 +125,10 @@ export default function Home({ history }: HomeProps) {
         />
         <button type='submit'>Search</button>
       </form>
+
+      <button onClick={getCurrentLocation} type='button'>
+        Get Current Location
+      </button>
 
       <h3>Favourites</h3>
       {favourites.map((cityData) => (

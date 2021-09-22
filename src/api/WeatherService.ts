@@ -22,4 +22,14 @@ export default class WeatherService {
       return JSON.parse(localData);
     }
   }
+
+  static async getWeatherByCoords({
+    latitude,
+    longitude,
+  }: Pick<GeolocationCoordinates, 'latitude' | 'longitude'>) {
+    const { data } = await this.instance.get<OWMResponse>(
+      `/weather?lat=${latitude}&lon=${longitude}&appId=${this.apiKey}&units=imperial`
+    );
+    return data;
+  }
 }
