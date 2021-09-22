@@ -4,6 +4,7 @@ import { RouteComponentProps } from 'react-router-dom';
 import CityService from '../utils/CityService';
 import WeatherService from '../api/WeatherService';
 import CityListing from '../components/CityListing';
+import StorageService from '../utils/StorageService';
 import { getUrlSlug, sortWeatherData } from '../utils/functions';
 
 interface HomeProps extends RouteComponentProps {}
@@ -50,9 +51,8 @@ export default function Home({ history }: HomeProps) {
   useEffect(() => {
     async function getFavourites() {
       setIsLoading(true);
-      const favourites: string[] = JSON.parse(
-        localStorage.getItem('favourites') || '[]'
-      );
+      const favourites = StorageService.get<string[]>('favourites') || [];
+
       try {
         const weatherData = await Promise.all(favourites.map(getCityData));
         const sortedWeatherData = sortWeatherData(weatherData);
@@ -99,9 +99,9 @@ export default function Home({ history }: HomeProps) {
     return function () {
       const filtered = favourites.filter(({ name }) => name !== cityName);
       setFavourites(filtered);
-      localStorage.setItem(
+      StorageService.store(
         'favourites',
-        JSON.stringify(filtered.map(({ name }) => name))
+        filtered.map(({ name }) => name)
       );
     };
   }

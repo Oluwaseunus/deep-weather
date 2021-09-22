@@ -3,6 +3,7 @@ import { StaticContext } from 'react-router';
 import { Link, RouteComponentProps } from 'react-router-dom';
 
 import WeatherService from '../api/WeatherService';
+import StorageService from '../utils/StorageService';
 
 interface RouteParams {
   city: string;
@@ -30,7 +31,7 @@ export default function City({ history, location }: CityPageProps) {
   const [isLoading, setIsLoading] = useState(true);
   const [erorrMessage, setErrorMessage] = useState('');
   const [notes, setNotes] = useState<Note[]>(
-    JSON.parse(localStorage.getItem('' + location.state?.cityData?.id) || '[]')
+    StorageService.get('' + location.state?.cityData?.id) || []
   );
 
   useEffect(() => {
@@ -56,23 +57,20 @@ export default function City({ history, location }: CityPageProps) {
 
   useEffect(() => {
     const notes =
-      localStorage.getItem('' + location.state?.cityData?.id) || '[]';
-    setNotes(JSON.parse(notes));
+      StorageService.get<Note[]>('' + location.state?.cityData?.id) || [];
+    setNotes(notes);
   }, [location.state?.cityData?.id]);
 
   useEffect(() => {
     if (location.state?.cityData) {
-      localStorage.setItem(
-        '' + location.state!.cityData!.id,
-        JSON.stringify(notes)
-      );
+      StorageService.store('' + location.state!.cityData!.id, notes);
     }
   }, [notes, location.state]);
 
   function addToFavourites() {
-    const favourites = JSON.parse(localStorage.getItem('favourites') || '[]');
-    favourites.push(location.state?.cityData?.name);
-    localStorage.setItem('favourites', JSON.stringify(favourites));
+    const favourites = StorageService.get<string[]>('favourites') || [];
+    favourites.push(location.state!.cityData!.name);
+    StorageService.store('favourites', favourites);
   }
 
   function handleEdit(noteId: string) {
