@@ -72,6 +72,7 @@ export default function Home({ history }: HomeProps) {
         />
         <button type='submit'>Search</button>
       </form>
+
       {weatherData.map((cityData) => (
         <Link
           key={cityData.name}

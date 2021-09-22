@@ -7,9 +7,17 @@ export default class WeatherService {
   });
 
   static async getCityWeather(cityName: string) {
-    const { data } = await this.instance.get<OWMResponse>(
-      `/weather?q=${cityName}&appid=${this.apiKey}&units=imperial`
-    );
-    return data;
+    const dataName = cityName + '-data';
+    const localData = localStorage.getItem(dataName);
+
+    if (!localData) {
+      const { data } = await this.instance.get<OWMResponse>(
+        `/weather?q=${cityName}&appid=${this.apiKey}&units=imperial`
+      );
+      localStorage.setItem(cityName + '-data', JSON.stringify(data));
+      return data;
+    } else {
+      return JSON.parse(localData);
+    }
   }
 }
