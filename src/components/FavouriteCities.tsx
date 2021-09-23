@@ -31,14 +31,12 @@ export default function FavouriteCities() {
   }, []);
 
   function removeFromFavourites(cityName: string) {
-    return function () {
-      const filtered = favourites.filter(({ name }) => name !== cityName);
-      setFavourites(filtered);
-      StorageService.store(
-        'favourites',
-        filtered.map(({ name }) => name)
-      );
-    };
+    const filtered = favourites.filter(({ name }) => name !== cityName);
+    setFavourites(filtered);
+    StorageService.store(
+      'favourites',
+      filtered.map(({ name }) => name)
+    );
   }
 
   if (isLoading) return <span>Loading...</span>;

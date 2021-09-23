@@ -38,9 +38,7 @@ export default function CityNotes() {
   }
 
   function removeNote(noteId: string) {
-    return function () {
-      setNotes(notes.filter(({ id }) => noteId !== id));
-    };
+    setNotes(notes.filter(({ id }) => noteId !== id));
   }
 
   function saveNote() {
@@ -64,7 +62,7 @@ export default function CityNotes() {
       {notes.map(({ id, text }) => (
         <div key={id} style={{ display: 'flex' }}>
           <p onClick={() => handleEdit(id)}>{text}</p>
-          <button onClick={removeNote(id)}>Remove note</button>
+          <button onClick={() => removeNote(id)}>Remove note</button>
         </div>
       ))}
 

@@ -38,14 +38,12 @@ export default function TopCities() {
   }, []);
 
   function removeCity(name: string) {
-    return function () {
-      const normalizedName = normalizeString(name);
-      CityService.removeCity(normalizedName);
+    const normalizedName = normalizeString(name);
+    CityService.removeCity(normalizedName);
 
-      setWeatherData((weatherData) =>
-        weatherData.filter((cityData) => cityData.name !== name)
-      );
-    };
+    setWeatherData((weatherData) =>
+      weatherData.filter((cityData) => cityData.name !== name)
+    );
   }
 
   if (isLoading) return <span>Loading...</span>;

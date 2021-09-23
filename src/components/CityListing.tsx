@@ -3,7 +3,7 @@ import { getUrlSlug } from '../utils/functions';
 
 interface CityListingProps {
   cityData: OWMResponse;
-  removeCity: (cityName: string) => () => void;
+  removeCity: (cityName: string) => void;
 }
 
 export default function CityListing({
@@ -22,7 +22,7 @@ export default function CityListing({
         {cityData.name}
       </Link>
       <p>{cityData.main.temp}&deg;F</p>
-      <button onClick={removeCity(cityData.name)}>Remove Item</button>
+      <button onClick={() => removeCity(cityData.name)}>Remove Item</button>
     </div>
   );
 }

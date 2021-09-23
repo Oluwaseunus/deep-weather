@@ -8,7 +8,13 @@ export default function LocationSearch() {
 
   function handleFormSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    history.push(`/${getUrlSlug(searchQuery)}`);
+    const trimmed = searchQuery.trim();
+
+    if (trimmed) {
+      history.push(`/${getUrlSlug(trimmed)}`);
+    } else {
+      setSearchQuery('');
+    }
   }
 
   return (
