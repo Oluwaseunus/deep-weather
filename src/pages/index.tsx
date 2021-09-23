@@ -1,9 +1,9 @@
-import { useState } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 
 import { getUrlSlug } from '../utils/functions';
 import TopCities from '../components/TopCities';
 import WeatherService from '../api/WeatherService';
+import LocationSearch from '../components/LocationSearch';
 import FavouriteCities from '../components/FavouriteCities';
 
 interface HomeProps extends RouteComponentProps {}
@@ -15,8 +15,6 @@ function geolocationPostitionErrorCallback({
 }
 
 export default function Home({ history }: HomeProps) {
-  const [searchQuery, setSearchQuery] = useState('');
-
   function getCurrentLocation() {
     async function successCallback(position: GeolocationPosition) {
       const { latitude, longitude } = position.coords;
@@ -37,17 +35,7 @@ export default function Home({ history }: HomeProps) {
 
   return (
     <>
-      <form
-        className='search-input__wrapper'
-        onSubmit={() => history.push(`/${getUrlSlug(searchQuery)}`)}
-      >
-        <input
-          type='text'
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-        />
-        <button type='submit'>Search</button>
-      </form>
+      <LocationSearch />
 
       <button onClick={getCurrentLocation} type='button'>
         Get Current Location

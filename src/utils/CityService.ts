@@ -5,7 +5,7 @@ export default class CityService {
   static getTopCities(): string[] {
     const localCities = StorageService.get<string[]>('topCities');
 
-    if (localCities) {
+    if (localCities?.length) {
       return localCities;
     } else {
       StorageService.store('topCities', topCities);

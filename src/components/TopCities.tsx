@@ -2,7 +2,11 @@ import { useState, useEffect } from 'react';
 
 import CityListing from './CityListing';
 import CityService from '../utils/CityService';
-import { getCityData, sortWeatherData } from '../utils/functions';
+import {
+  getCityData,
+  normalizeString,
+  sortWeatherData,
+} from '../utils/functions';
 
 export default function TopCities() {
   const [isLoading, setIsLoading] = useState(true);
@@ -35,7 +39,9 @@ export default function TopCities() {
 
   function removeCity(name: string) {
     return function () {
-      CityService.removeCity(name);
+      const normalizedName = normalizeString(name);
+      CityService.removeCity(normalizedName);
+
       setWeatherData((weatherData) =>
         weatherData.filter((cityData) => cityData.name !== name)
       );
@@ -46,7 +52,7 @@ export default function TopCities() {
 
   if (errorMessage) return <span>{errorMessage}</span>;
 
-  if (!weatherData.length) return <span>Response is empty.</span>;
+  if (!weatherData.length) return <span>There are no cities to show.</span>;
 
   return (
     <div>

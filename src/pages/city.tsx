@@ -79,25 +79,29 @@ export default function City({ history, location }: CityPageProps) {
 
   if (isLoading) return <span>Loading...</span>;
 
-  if (!cityData) return <span>{erorrMessage}</span>;
-
   return (
     <div>
       <Link to='/'>Go Home</Link>
-      <p>City Name: {cityData.name}</p>
-      <p>Temperature: {cityData.main.temp}&deg;F</p>
+      {cityData ? (
+        <div>
+          <p>City Name: {cityData.name}</p>
+          <p>Temperature: {cityData.main.temp}&deg;F</p>
 
-      {isFavourite ? (
-        <button type='button' onClick={removeFromFavourites}>
-          Remove from Favourites
-        </button>
+          {isFavourite ? (
+            <button type='button' onClick={removeFromFavourites}>
+              Remove from Favourites
+            </button>
+          ) : (
+            <button onClick={addToFavourites} type='button'>
+              Add to Favourites
+            </button>
+          )}
+
+          <CityNotes />
+        </div>
       ) : (
-        <button onClick={addToFavourites} type='button'>
-          Add to Favourites
-        </button>
+        <div>{erorrMessage}</div>
       )}
-
-      <CityNotes />
     </div>
   );
 }
