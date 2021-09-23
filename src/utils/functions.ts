@@ -1,3 +1,9 @@
+import WeatherService from '../api/WeatherService';
+
+export async function getCityData(cityName: string) {
+  return await WeatherService.getCityWeather(cityName);
+}
+
 export function getUrlSlug(cityName: string) {
   return cityName.replaceAll(' ', '-').toLowerCase();
 }
