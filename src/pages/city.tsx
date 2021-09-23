@@ -30,6 +30,7 @@ export default function City({ history, location }: CityPageProps) {
   const [idToEdit, setIdToEdit] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [erorrMessage, setErrorMessage] = useState('');
+  const [isFavourite, setIsFavourite] = useState(false);
   const [notes, setNotes] = useState<Note[]>(
     StorageService.get('' + location.state?.cityData?.id) || []
   );
@@ -42,6 +43,7 @@ export default function City({ history, location }: CityPageProps) {
           const cityData = await WeatherService.getCityWeather(
             location.pathname.slice(1).replaceAll('-', ' ')
           );
+
           history.replace(location.pathname, { cityData });
         }
       } catch (err: any) {
@@ -52,6 +54,7 @@ export default function City({ history, location }: CityPageProps) {
         setIsLoading(false);
       }
     }
+
     getCityData();
   }, [history, location.pathname, location.state?.cityData]);
 
@@ -67,10 +70,30 @@ export default function City({ history, location }: CityPageProps) {
     }
   }, [notes, location.state]);
 
+  useEffect(() => {
+    const favourites = StorageService.get<string[]>('favourites') || [];
+    const cityIsFavourite = favourites.includes(
+      location.state?.cityData?.name || ''
+    );
+
+    setIsFavourite(cityIsFavourite);
+  }, [location.state?.cityData?.name]);
+
   function addToFavourites() {
     const favourites = StorageService.get<string[]>('favourites') || [];
     favourites.push(location.state!.cityData!.name);
     StorageService.store('favourites', favourites);
+    setIsFavourite(true);
+  }
+
+  function removeFromFavourites() {
+    const favourites = StorageService.get<string[]>('favourites') || [];
+    StorageService.store(
+      'favourites',
+      favourites.filter((city) => location.state!.cityData!.name !== city)
+    );
+
+    setIsFavourite(false);
   }
 
   function handleEdit(noteId: string) {
@@ -111,7 +134,16 @@ export default function City({ history, location }: CityPageProps) {
       <Link to='/'>Go Home</Link>
       <p>City Name: {cityData.name}</p>
       <p>Temperature: {cityData.main.temp}&deg;F</p>
-      <button onClick={addToFavourites}>Add to Favourites</button>
+
+      {isFavourite ? (
+        <button type='button' onClick={removeFromFavourites}>
+          Remove from Favourites
+        </button>
+      ) : (
+        <button onClick={addToFavourites} type='button'>
+          Add to Favourites
+        </button>
+      )}
 
       {notes.map(({ id, text }) => (
         <div key={id} style={{ display: 'flex' }}>
