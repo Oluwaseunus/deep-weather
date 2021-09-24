@@ -17,13 +17,16 @@ interface OWMResponse {
     deg: number;
     speed: number;
   };
+  rain?: {
+    '1h': number;
+  };
   sys: {
     id: number;
     type: number;
     sunset: number;
-    message: number;
     country: string;
     sunrise: number;
+    message?: number;
   };
   weather: [
     {
