@@ -12,16 +12,14 @@ export default function FavouriteCities() {
   useEffect(() => {
     async function getFavourites() {
       setIsLoading(true);
-      const favourites = StorageService.get<string[]>('favourites') || [];
 
       try {
+        const favourites = StorageService.get<string[]>('favourites') || [];
         const weatherData = await Promise.all(favourites.map(getCityData));
         const sortedWeatherData = sortWeatherData(weatherData);
         setFavourites(sortedWeatherData);
-      } catch (err) {
-        setErrorMessage(
-          err instanceof Error ? err.message : 'An unexpected error occurred.'
-        );
+      } catch (err: any) {
+        setErrorMessage(err.message || 'An unexpected error occurred.');
       } finally {
         setIsLoading(false);
       }
@@ -33,10 +31,8 @@ export default function FavouriteCities() {
   function removeFromFavourites(cityName: string) {
     const filtered = favourites.filter(({ name }) => name !== cityName);
     setFavourites(filtered);
-    StorageService.store(
-      'favourites',
-      filtered.map(({ name }) => name)
-    );
+    const filteredNames = filtered.map(({ name }) => name);
+    StorageService.store('favourites', filteredNames);
   }
 
   if (isLoading) return <span>Loading...</span>;
