@@ -24,10 +24,8 @@ export default function TopCities() {
 
         const sortedWeatherData = sortWeatherData(weatherData);
         setWeatherData(sortedWeatherData);
-      } catch (err) {
-        setErrorMessage(
-          err instanceof Error ? err.message : 'An unexpected error occurred.'
-        );
+      } catch (err: any) {
+        setErrorMessage(err.message || 'An unexpected error occurred.');
         return [];
       } finally {
         setIsLoading(false);
