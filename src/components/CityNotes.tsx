@@ -20,13 +20,6 @@ export default function CityNotes() {
   );
 
   useEffect(() => {
-    const notes =
-      StorageService.get<Note[]>('' + location.state?.cityData?.id) || [];
-
-    setNotes(notes);
-  }, [location.state?.cityData?.id]);
-
-  useEffect(() => {
     if (location.state?.cityData) {
       StorageService.store('' + location.state!.cityData!.id, notes);
     }
