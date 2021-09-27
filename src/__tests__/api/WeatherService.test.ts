@@ -1,6 +1,6 @@
 import axios from 'axios';
+import { istanbulData } from '../utils/data';
 import WeatherService from '../../api/WeatherService';
-import { istanbulData } from '../../utils/__tests/data';
 
 const mockedAxios = axios as jest.Mocked<typeof axios>;
 

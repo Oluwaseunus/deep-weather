@@ -3,8 +3,8 @@ import { createMemoryHistory } from 'history';
 import userEvent from '@testing-library/user-event';
 import { render, screen } from '@testing-library/react';
 
+import { istanbulData } from '../utils/data';
 import CityNotes from '../../components/CityNotes';
-import { istanbulData } from '../../utils/__tests/data';
 
 function renderWithRouter() {
   const history = createMemoryHistory();

@@ -1,8 +1,8 @@
 import { MemoryRouter } from 'react-router-dom';
 import { render, screen, fireEvent } from '@testing-library/react';
 
+import { istanbulData } from '../utils/data';
 import CityListing from '../../components/CityListing';
-import { istanbulData } from '../../utils/__tests/data';
 
 const removeCity = jest.fn();
 

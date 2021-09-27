@@ -3,7 +3,7 @@ import { createMemoryHistory } from 'history';
 import userEvent from '@testing-library/user-event';
 import { render, screen } from '@testing-library/react';
 
-import { istanbulData } from '../../utils/__tests/data';
+import { istanbulData } from '../utils/data';
 import FavouriteCities from '../../components/FavouriteCities';
 
 const history = createMemoryHistory();

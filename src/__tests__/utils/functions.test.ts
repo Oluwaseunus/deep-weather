@@ -1,5 +1,5 @@
 import axios from 'axios';
-import * as functions from '../functions';
+import * as functions from '../../utils/functions';
 import { istanbulData, shangHaiData } from './data';
 
 const mockedAxios = axios as jest.Mocked<typeof axios>;
@@ -21,7 +21,13 @@ describe('functions', () => {
   });
 
   test('sortWeatherData', () => {
-    const data = [shangHaiData, istanbulData];
+    let data = [shangHaiData, istanbulData];
+    expect(functions.sortWeatherData(data)).toEqual([
+      istanbulData,
+      shangHaiData,
+    ]);
+
+    data = [istanbulData, shangHaiData];
     expect(functions.sortWeatherData(data)).toEqual([
       istanbulData,
       shangHaiData,

@@ -58,3 +58,7 @@ export const shangHaiData: OWMResponse = {
   weather: [{ id: 500, main: 'Rain', description: 'light rain', icon: '10n' }],
   wind: { speed: 6.71, deg: 120 },
 };
+
+test('data file', () => {
+  expect(true).toBe(true);
+});
