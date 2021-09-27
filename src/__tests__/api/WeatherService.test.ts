@@ -4,8 +4,6 @@ import WeatherService from '../../api/WeatherService';
 
 const mockedAxios = axios as jest.Mocked<typeof axios>;
 
-jest.spyOn(localStorage, 'setItem');
-
 describe('WeatherService', () => {
   it('gets the weather for a city', async () => {
     mockedAxios.get.mockResolvedValueOnce({ data: istanbulData });
