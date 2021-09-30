@@ -1,27 +1,17 @@
 import { useState, useEffect } from 'react';
-import { StaticContext } from 'react-router';
-import { Link, RouteComponentProps } from 'react-router-dom';
+import { Link, useHistory, useLocation } from 'react-router-dom';
 
 import CityNotes from '../components/CityNotes';
 import WeatherService from '../api/WeatherService';
 import StorageService from '../utils/StorageService';
 
-interface RouteParams {
-  city: string;
-}
-
 interface LocationState {
   cityData?: OWMResponse;
 }
 
-export interface CityPageProps
-  extends RouteComponentProps<
-    RouteParams,
-    StaticContext,
-    LocationState | undefined
-  > {}
-
-export default function City({ history, location }: CityPageProps) {
+export default function City() {
+  const history = useHistory();
+  const location = useLocation<LocationState>();
   const [isLoading, setIsLoading] = useState(true);
   const [erorrMessage, setErrorMessage] = useState('');
   const [isFavourite, setIsFavourite] = useState(false);
@@ -39,7 +29,7 @@ export default function City({ history, location }: CityPageProps) {
         }
       } catch (err: any) {
         setErrorMessage(
-          err.response.data.message || 'An unexpected error occured.'
+          err.response?.data?.message || 'An unexpected error occured.'
         );
       } finally {
         setIsLoading(false);

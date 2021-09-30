@@ -13,7 +13,7 @@ export default class CityService {
     }
   }
 
-  static removeCity(cityName: string) {
+  static removeFromTopCities(cityName: string) {
     const localCities = StorageService.get<string[]>('topCities');
     const cityNames = localCities || topCities;
     const updatedCities = cityNames.filter((name) => name !== cityName);

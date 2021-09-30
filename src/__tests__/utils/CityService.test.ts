@@ -31,14 +31,14 @@ describe('City Service', () => {
   });
 
   it('removes a city from the list', () => {
-    CityService.removeCity('Istanbul');
+    CityService.removeFromTopCities('Istanbul');
     expect(setItem).toBeCalledWith(
       'topCities',
       JSON.stringify(topCities.filter((city) => city !== 'Istanbul'))
     );
 
     getItem.mockReturnValueOnce(JSON.stringify(['Istanbul', 'Turkey']));
-    CityService.removeCity('Turkey');
+    CityService.removeFromTopCities('Turkey');
     expect(setItem).toBeCalledWith('topCities', JSON.stringify(['Istanbul']));
   });
 });

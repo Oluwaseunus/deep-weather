@@ -37,7 +37,7 @@ export default function TopCities() {
 
   function removeCity(name: string) {
     const normalizedName = normalizeString(name);
-    CityService.removeCity(normalizedName);
+    CityService.removeFromTopCities(normalizedName);
 
     setWeatherData((weatherData) =>
       weatherData.filter((cityData) => cityData.name !== name)
