@@ -124,4 +124,14 @@ describe('CityNotes', () => {
 
     expect(setItem).toBeCalled();
   });
+
+  it(`does not add empty notes`, () => {
+    renderWithRouter();
+    expect(screen.getByRole('textbox')).toHaveValue('');
+
+    setItem.mockClear();
+
+    userEvent.click(screen.getByRole('button', { name: /save note/i }));
+    expect(setItem).not.toBeCalled();
+  });
 });

@@ -22,7 +22,9 @@ describe('CityListing', () => {
     renderWithRouter();
     expect(screen.getByText(/istanbul/i)).toBeInTheDocument();
     expect(
-      screen.getByText(new RegExp(String(istanbulData.main.temp), 'ig'))
+      screen.getByText(
+        new RegExp(String(Math.round(istanbulData.main.temp)), 'ig')
+      )
     ).toBeInTheDocument();
   });
 

@@ -54,9 +54,7 @@ describe('TopCities', () => {
     expect(await screen.findByText(/defaults/i)).toBeInTheDocument();
     userEvent.click(screen.getByRole('button', { name: 'Remove Item' }));
 
-    expect(
-      screen.getByText(/there are no cities to show/i)
-    ).toBeInTheDocument();
+    expect(screen.getByText(/hidden all defaults/i)).toBeInTheDocument();
     expect(setItem).toBeCalledWith('topCities', JSON.stringify([]));
   });
 
