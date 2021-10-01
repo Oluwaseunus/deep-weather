@@ -35,35 +35,46 @@ export default function CityNotes() {
   }
 
   function saveNote() {
-    let updatedNotes: Note[] = notes;
+    const trimmedText = text.trim();
 
-    if (idToEdit) {
-      updatedNotes = updatedNotes.map((note) =>
-        note.id === idToEdit ? { ...note, text: text } : note
-      );
-    } else {
-      updatedNotes = [...notes, { id: '' + Date.now(), text }];
+    if (trimmedText) {
+      let updatedNotes: Note[] = notes;
+
+      if (idToEdit) {
+        updatedNotes = updatedNotes.map((note) =>
+          note.id === idToEdit ? { ...note, text: trimmedText } : note
+        );
+      } else {
+        updatedNotes = [...notes, { id: '' + Date.now(), text: trimmedText }];
+      }
+
+      setText('');
+      setIdToEdit('');
+      setNotes(updatedNotes);
     }
-
-    setText('');
-    setIdToEdit('');
-    setNotes(updatedNotes);
   }
 
   return (
-    <div>
-      {notes.map(({ id, text }) => (
-        <div key={id} style={{ display: 'flex' }}>
-          <p onClick={() => handleEdit(id)}>{text}</p>
-          <button onClick={() => removeNote(id)}>Remove note</button>
-        </div>
-      ))}
+    <div className='city-notes'>
+      <ul className='city-notes-list'>
+        {notes.map(({ id, text }) => (
+          <li key={id} className='city-notes-item'>
+            <p onClick={() => handleEdit(id)}>{text}</p>
+            <button className='danger' onClick={() => removeNote(id)}>
+              Remove note
+            </button>
+          </li>
+        ))}
+      </ul>
 
-      <textarea
-        value={text}
-        onChange={(e) => setText(e.target.value)}
-      ></textarea>
-      <button onClick={saveNote}>Save Note</button>
+      <div className='city-notes-form'>
+        <textarea
+          value={text}
+          placeholder='Add a note'
+          onChange={(e) => setText(e.target.value)}
+        ></textarea>
+        <button onClick={saveNote}>Save Note</button>
+      </div>
     </div>
   );
 }

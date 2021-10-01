@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link, useHistory, useLocation } from 'react-router-dom';
 
 import CityNotes from '../components/CityNotes';
+import { capitalize } from '../utils/functions';
 import WeatherService from '../api/WeatherService';
 import StorageService from '../utils/StorageService';
 
@@ -13,7 +14,7 @@ export default function City() {
   const history = useHistory();
   const location = useLocation<LocationState>();
   const [isLoading, setIsLoading] = useState(true);
-  const [erorrMessage, setErrorMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
   const [isFavourite, setIsFavourite] = useState(false);
 
   useEffect(() => {
@@ -67,30 +68,52 @@ export default function City() {
 
   const { cityData } = location.state || {};
 
-  if (isLoading) return <span>Loading...</span>;
+  if (isLoading) return <div className='loading'>Loading...</div>;
 
   return (
-    <div>
-      <Link to='/'>Go Home</Link>
+    <div className='city-page'>
+      <Link to='/' className='go-home'>
+        &larr; Go Home
+      </Link>
       {cityData ? (
-        <div>
-          <p>City Name: {cityData.name}</p>
-          <p>Temperature: {cityData.main.temp}&deg;F</p>
+        <>
+          <div className='city-page-header'>
+            <div className='citydata-info'>
+              <h1 className='citydata-title'>
+                {cityData.name}, {cityData.sys.country}
+              </h1>
+              <p className='citydata-temperature'>
+                Temperature: {Math.round(cityData.main.temp)}&deg;F
+              </p>
+              <p className='citydata-summary'>
+                <span className='citydata-feels-like'>
+                  Feels like {Math.round(cityData.main.feels_like)}&deg;F.
+                </span>
+                <span className='citydata-description'>
+                  {capitalize(cityData.weather[0].description)}.
+                </span>
+              </p>
+            </div>
 
-          {isFavourite ? (
-            <button type='button' onClick={removeFromFavourites}>
-              Remove from Favourites
-            </button>
-          ) : (
-            <button onClick={addToFavourites} type='button'>
-              Add to Favourites
-            </button>
-          )}
+            {isFavourite ? (
+              <button
+                type='button'
+                className='danger'
+                onClick={removeFromFavourites}
+              >
+                Remove from Favourites
+              </button>
+            ) : (
+              <button type='button' onClick={addToFavourites}>
+                Add to Favourites
+              </button>
+            )}
+          </div>
 
           <CityNotes />
-        </div>
+        </>
       ) : (
-        <div>{erorrMessage}</div>
+        <div className='city-page-error'>{capitalize(errorMessage)}</div>
       )}
     </div>
   );

@@ -18,13 +18,17 @@ export default function LocationSearch() {
   }
 
   return (
-    <form onSubmit={handleFormSubmit} className='search-input__wrapper'>
-      <input
-        type='text'
-        value={searchQuery}
-        onChange={(e) => setSearchQuery(e.target.value)}
-      />
-      <button type='submit'>Search</button>
-    </form>
+    <div className='search-form__wrapper'>
+      <form onSubmit={handleFormSubmit} className='search-form'>
+        <input
+          type='text'
+          value={searchQuery}
+          className='search-input'
+          placeholder='Search for a location'
+          onChange={(e) => setSearchQuery(e.target.value)}
+        />
+        <button type='submit'>Search</button>
+      </form>
+    </div>
   );
 }

@@ -1,5 +1,9 @@
 import WeatherService from '../api/WeatherService';
 
+export function capitalize(string: string) {
+  return string[0].toUpperCase() + string.slice(1);
+}
+
 export async function getCityData(cityName: string) {
   return await WeatherService.getCityWeather(cityName);
 }

@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import CityListing from './CityListing';
 import CityService from '../utils/CityService';
 import {
+  capitalize,
   getCityData,
   normalizeString,
   sortWeatherData,
@@ -15,8 +16,6 @@ export default function TopCities() {
 
   useEffect(() => {
     async function fetchTopCities() {
-      setIsLoading(true);
-
       try {
         const weatherData = await Promise.all(
           CityService.getTopCities().map(getCityData)
@@ -44,22 +43,26 @@ export default function TopCities() {
     );
   }
 
-  if (isLoading) return <span>Loading...</span>;
-
-  if (errorMessage) return <span>{errorMessage}</span>;
-
-  if (!weatherData.length) return <span>There are no cities to show.</span>;
-
   return (
-    <div>
-      <h3>Defaults</h3>
-      {weatherData.map((cityData) => (
-        <CityListing
-          key={cityData.id}
-          cityData={cityData}
-          removeCity={removeCity}
-        />
-      ))}
+    <div className='citylist'>
+      <h3 className='citylist-title'>Defaults</h3>
+      {isLoading ? (
+        <div className='loading'>Loading...</div>
+      ) : errorMessage ? (
+        <div className='error'>{capitalize(errorMessage)}</div>
+      ) : weatherData.length ? (
+        <ul className='citylist-list'>
+          {weatherData.map((cityData) => (
+            <CityListing
+              key={cityData.id}
+              cityData={cityData}
+              removeCity={removeCity}
+            />
+          ))}
+        </ul>
+      ) : (
+        <p>Hidden all defaults.</p>
+      )}
     </div>
   );
 }

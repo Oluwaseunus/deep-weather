@@ -5,13 +5,14 @@ import CurrentLocation from '../components/CurrentLocation';
 
 export default function Home() {
   return (
-    <>
+    <div className='home-page'>
       <LocationSearch />
 
       <CurrentLocation />
 
       <FavouriteCities />
+
       <TopCities />
-    </>
+    </div>
   );
 }

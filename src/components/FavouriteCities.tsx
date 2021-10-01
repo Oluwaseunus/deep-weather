@@ -11,8 +11,6 @@ export default function FavouriteCities() {
 
   useEffect(() => {
     async function getFavourites() {
-      setIsLoading(true);
-
       try {
         const favourites = StorageService.get<string[]>('favourites') || [];
         const weatherData = await Promise.all(favourites.map(getCityData));
@@ -35,21 +33,23 @@ export default function FavouriteCities() {
     StorageService.store('favourites', filteredNames);
   }
 
-  if (isLoading) return <span>Loading...</span>;
-
-  if (errorMessage) return <span>{errorMessage}</span>;
-
   return (
-    <div>
-      <h3>Favourites</h3>
-      {favourites.length ? (
-        favourites.map((cityData) => (
-          <CityListing
-            key={cityData.id}
-            cityData={cityData}
-            removeCity={removeFromFavourites}
-          />
-        ))
+    <div className='citylist'>
+      <h3 className='citylist-title'>Favourites</h3>
+      {isLoading ? (
+        <div className='loading'>Loading...</div>
+      ) : errorMessage ? (
+        <div className='error'>{errorMessage}</div>
+      ) : favourites.length ? (
+        <ul className='citylist-list'>
+          {favourites.map((cityData) => (
+            <CityListing
+              key={cityData.id}
+              cityData={cityData}
+              removeCity={removeFromFavourites}
+            />
+          ))}
+        </ul>
       ) : (
         <span>You have no favourites to show.</span>
       )}

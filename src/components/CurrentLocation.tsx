@@ -14,8 +14,10 @@ export default function CurrentLocation() {
   }
 
   return (
-    <button onClick={getCurrentLocation} type='button'>
-      Get Current Location
-    </button>
+    <div className='current-location__wrapper'>
+      <button onClick={getCurrentLocation} type='button'>
+        Get Current Location
+      </button>
+    </div>
   );
 }

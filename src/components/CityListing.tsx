@@ -11,9 +11,9 @@ export default function CityListing({
   removeCity,
 }: CityListingProps) {
   return (
-    <div style={{ display: 'flex' }}>
+    <li className='citylist-item'>
       <Link
-        style={{ marginRight: '1rem' }}
+        className='citylist-item-name'
         to={{
           state: { cityData },
           pathname: `/${getUrlSlug(cityData.name)}`,
@@ -21,8 +21,12 @@ export default function CityListing({
       >
         {cityData.name}
       </Link>
-      <p>{cityData.main.temp}&deg;F</p>
-      <button onClick={() => removeCity(cityData.name)}>Remove Item</button>
-    </div>
+      <p className='citylist-item-temp'>
+        {Math.round(cityData.main.temp)}&deg;F
+      </p>
+      <button className='danger' onClick={() => removeCity(cityData.name)}>
+        Remove Item
+      </button>
+    </li>
   );
 }
