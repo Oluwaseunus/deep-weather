@@ -5,7 +5,6 @@ import { istanbulData } from '../utils/data';
 import { resolveLocation } from '../../utils/functions';
 import CurrentLocation from '../../components/CurrentLocation';
 
-jest.spyOn(window, 'alert');
 jest.mock('../../utils/functions', () => ({
   resolveLocation: jest.fn(),
 }));
@@ -32,7 +31,6 @@ describe('CurrentLocation', () => {
     render(<CurrentLocation />);
     userEvent.click(getButton());
     await expect(resolveLocation).rejects.toMatch(rejectedValue);
-    expect(window.alert).toBeCalled();
   });
 
   it('reroutes the user when the location resolves', async () => {

@@ -1,3 +1,4 @@
+import Swal from 'sweetalert2';
 import { useHistory } from 'react-router';
 import { getUrlSlug, resolveLocation } from '../utils/functions';
 
@@ -9,7 +10,11 @@ export default function CurrentLocation() {
       const cityData = await resolveLocation();
       history.push(`/${getUrlSlug(cityData.name)}`, { cityData });
     } catch (err: any) {
-      alert('Failed');
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'We were unable to get your city from your coordinates. Please try searching instead.',
+      });
     }
   }
 

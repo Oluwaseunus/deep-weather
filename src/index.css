@@ -132,6 +132,7 @@ span {
   margin: auto;
   display: flex;
   margin-bottom: 5rem;
+  justify-content: space-between;
 }
 
 .citydata-info {
@@ -162,16 +163,16 @@ span {
 }
 
 .city-notes-item {
-  width: 80%;
-  height: 6rem;
   margin: auto;
-  display: flex;
-  padding: 0 5rem;
+  padding: 2rem;
+  display: grid;
   font-size: 1.6rem;
   border-radius: 4px;
   align-items: center;
   border: 1px solid #777;
-  justify-content: space-between;
+  grid-column-gap: 10rem;
+  grid-template-rows: 1fr;
+  grid-template-columns: 10fr 1fr;
 }
 
 .city-notes-item:not(:last-of-type) {
@@ -226,13 +227,19 @@ div.error {
   background-color: #e31c3d;
 }
 
-@media only screen and (max-width: 1024px) {
-  .citylist {
-    width: 85%;
-  }
-
+@media only screen and (max-width: 1680px) {
   .city-page {
     width: 75%;
+  }
+}
+
+@media only screen and (max-width: 1024px) {
+  html {
+    font-size: 8px;
+  }
+
+  .citylist {
+    width: 85%;
   }
 
   .city-page-header {
@@ -259,10 +266,6 @@ div.error {
 }
 
 @media only screen and (max-width: 540px) {
-  html {
-    font-size: 8px;
-  }
-
   .home-page {
     width: 85%;
   }
@@ -306,5 +309,11 @@ div.error {
 
   .city-notes-form textarea {
     width: 75%;
+  }
+}
+
+@media only screen and (max-width: 414px) {
+  .city-notes-item {
+    grid-column-gap: 5rem;
   }
 }
