@@ -22,6 +22,8 @@ button {
   font-size: 1.4rem;
   width: max-content;
   border-radius: 5px;
+  align-items: center;
+  display: inline-flex;
   font-family: inherit;
   padding: 1rem 1.5rem;
   background-color: #4361ee;
