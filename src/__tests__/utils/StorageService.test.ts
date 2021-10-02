@@ -23,12 +23,7 @@ describe('StorageService', () => {
     getItem.mockReturnValueOnce(JSON.stringify(words));
     let wordsInStorage = StorageService.get('words');
     expect(words).toEqual(wordsInStorage);
-
-    getItem.mockReturnValueOnce(words);
-    wordsInStorage = StorageService.get('words');
-    expect(words).toEqual(wordsInStorage);
-
-    expect(getItem).toHaveBeenCalledTimes(2);
+    expect(getItem).toHaveBeenCalledTimes(1);
   });
 
   it('stores values in localStorage', () => {

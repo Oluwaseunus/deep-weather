@@ -8,7 +8,7 @@ export default class WeatherService {
     baseURL: 'https://api.openweathermap.org/data/2.5',
   });
 
-  static async getCityWeather(cityName: string) {
+  static async getCityWeather(cityName: string): Promise<OWMResponse> {
     const slugName = getUrlSlug(cityName);
     const dataName = slugName + '-data';
     const localData = StorageService.get<OWMResponse>(dataName);
@@ -27,7 +27,10 @@ export default class WeatherService {
   static async getWeatherByCoords({
     latitude,
     longitude,
-  }: Pick<GeolocationCoordinates, 'latitude' | 'longitude'>) {
+  }: Pick<
+    GeolocationCoordinates,
+    'latitude' | 'longitude'
+  >): Promise<OWMResponse> {
     const { data } = await this.instance.get<OWMResponse>(
       `/weather?lat=${latitude}&lon=${longitude}&appId=${this.apiKey}&units=imperial`
     );
